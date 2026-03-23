@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=62.6"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "loop-generation-poc"
+version = "0.1.0"
+description = "A barebones PyTorch Lightning + Hydra proof-of-concept for standard diffusion and rectified flow."
+readme = "README.md"
+dynamic = ["dependencies"]
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.packages.find]
+where = ["src"]  # Tells pip to look inside src/
