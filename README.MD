@@ -1,6 +1,6 @@
 # Loop Generation POC
 
-A barebones PyTorch Lightning + Hydra proof-of-concept for standard diffusion and rectified flow.
+A barebones PyTorch Lightning + Hydra proof-of-concept for v-prediction diffusion and rectified flow.
 
 ## Installation
 
@@ -22,7 +22,7 @@ python3 train.py +experiment=rectified_flow
 This code was developed using Python 3.11 and PyTorch 2.10
 
 ## Features
-- Rectified Flow and V-Prediction trainging
+- Rectified Flow and V-Prediction training
 - Basic Shape Testing
 - Pure CLI sampling
 - WandB logging
