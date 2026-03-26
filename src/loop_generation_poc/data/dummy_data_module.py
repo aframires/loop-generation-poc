@@ -1,3 +1,4 @@
+import math
 from typing import Dict, Optional
 
 import pytorch_lightning as pl
@@ -16,6 +17,7 @@ class DummyLoopDataset(Dataset[Dict[str, torch.Tensor]]):
         latent_dim: int,
         text_seq_len: int,
         text_dim: int,
+        signal_type: str = "noise", 
     ) -> None:
         super().__init__()
         self.num_samples = num_samples
@@ -23,10 +25,25 @@ class DummyLoopDataset(Dataset[Dict[str, torch.Tensor]]):
         self.latent_dim = latent_dim
         self.text_seq_len = text_seq_len
         self.text_dim = text_dim
+        self.signal_type = signal_type
         
         # Pre-compute tensors so the model sees the same dummy data every epoch.
-        self.latents_data = torch.randn(num_samples, seq_len, latent_dim)
-        self.text_embeds_data = torch.randn(num_samples, text_seq_len, text_dim)
+        if self.signal_type == "sine":
+            # Create a deterministic sine wave
+            t = torch.linspace(0, 4 * math.pi, seq_len).unsqueeze(1)
+            single_latent = torch.sin(t).expand(seq_len, latent_dim)
+            
+            # 2. Expand it to fill the entire dataset
+            self.latents_data = single_latent.unsqueeze(0).expand(num_samples, -1, -1)
+            
+            # Use zeros in the text conditioning so we are not feeding random noise
+            single_text = torch.zeros(text_seq_len, text_dim)
+            self.text_embeds_data = single_text.unsqueeze(0).expand(num_samples, -1, -1)
+            
+        else:
+            # Random noise
+            self.latents_data = torch.randn(num_samples, seq_len, latent_dim)
+            self.text_embeds_data = torch.randn(num_samples, text_seq_len, text_dim)
 
     def __len__(self) -> int:
         return self.num_samples
@@ -53,12 +70,13 @@ class DummyDataModule(pl.LightningDataModule):
         text_dim: int = 768,
         num_workers: int = 0,
         pin_memory: bool = True, # makes it faster for the data to go from CPU to GPU
+        signal_type: str = "noise", # <-- ADDED TOGGLE
     ) -> None:
         super().__init__()
         if not 0.0 < train_val_split < 1.0:
             raise ValueError("train_val_split must be between 0 and 1 (exclusive).")
 
-        # This saves all __init__ args to self.hparams
+        # This saves all __init__ args (including signal_type!) to self.hparams
         self.save_hyperparameters()
         self.train_dataset: Optional[Dataset[Dict[str, torch.Tensor]]] = None
         self.val_dataset: Optional[Dataset[Dict[str, torch.Tensor]]] = None
@@ -71,6 +89,7 @@ class DummyDataModule(pl.LightningDataModule):
                 latent_dim=self.hparams.latent_dim,
                 text_seq_len=self.hparams.text_seq_len,
                 text_dim=self.hparams.text_dim,
+                signal_type=self.hparams.signal_type,
             )
 
             # Use the full dataset for training

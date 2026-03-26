@@ -1,0 +1,16 @@
+# @package _global_
+
+defaults:
+  - override /model: diffusion
+  - override /data: dummy
+
+data:
+  signal_type: "sine"
+
+model:
+  diffusion_objective: "rectified_flow"
+
+trainer:
+  max_steps: 10000
+  max_epochs: -1
+  val_check_interval: 500
