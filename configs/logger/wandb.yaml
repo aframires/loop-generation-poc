@@ -1,0 +1,4 @@
+_target_: pytorch_lightning.loggers.WandbLogger
+project: "loop_generation_poc"
+name: "${model.diffusion_objective}"
+save_dir: "logs/"

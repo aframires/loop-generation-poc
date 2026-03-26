@@ -1,3 +1,8 @@
 venv/
 .cache
 *.egg-info/
+__pycache__/
+.pytest_cache
+checkpoints/
+logs/
+outputs/

@@ -1,0 +1,27 @@
+_target_: loop_generation_poc.models.diffusion.ConditionalDiffusion
+
+# Architecture setup
+latent_dim: 64
+text_dim: 768
+hidden_dim: 128
+depth: 2
+num_heads: 4
+
+# Diffusion setup
+diffusion_objective: "v_prediction"
+
+optimizer:
+  _target_: torch.optim.AdamW
+  _partial_: true
+  lr: 1e-4
+  weight_decay: 1e-4
+
+loss_fn:
+  _target_: torch.nn.MSELoss
+
+scheduler:
+  _target_: loop_generation_poc.models.diffusion.LinearWarmupCosineAnnealingLR
+  _partial_: true
+  warmup_steps: 1000 #10% total steps
+  max_steps: 10000
+  eta_min: 0.0

@@ -1,0 +1,55 @@
+defaults:
+  - _self_
+  - model: diffusion
+  - data: dummy
+
+seed: 42
+
+# TRAINER CONFIGURATION
+trainer:
+  _target_: pytorch_lightning.Trainer
+  
+  # Hardware flags
+  accelerator: auto       # Automatically chooses "gpu", "mps" (Mac), or "cpu"
+  devices: auto           # Automatically uses all available GPUs
+  
+  # Distributed Training Strategy
+  # Change this to "ddp" to enable PyTorch Distributed Data Parallel across multiple GPUs
+  # Change to "auto" to let Lightning decide based on hardware
+  strategy: auto          
+  
+  # Precision (Mixed Precision Training)
+  # "16-mixed" or "bf16-mixed" saves 50% VRAM and speeds up training massively on modern GPUs
+  precision: "32-true"    
+  
+  # Standard limits
+  max_epochs: 10
+  log_every_n_steps: 10
+  
+  # Safety flags for distributed runs
+  sync_batchnorm: False   # Set to true if using batchnorm in DDP
+  use_distributed_sampler: True # Automatically shards data across GPUs
+
+  fast_dev_run: False
+
+# CALLBACKS
+callbacks:
+  model_checkpoint:
+    _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: "checkpoints/"
+    filename: "loop-gen-{epoch:02d}-{val/loss:.4f}"
+    monitor: "val/loss"
+    mode: "min"
+    save_top_k: 1
+    save_last: True
+
+  lr_monitor:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+    logging_interval: "step"
+
+# LOGGER (WandB)
+logger:
+  _target_: pytorch_lightning.loggers.WandbLogger
+  project: "loop_generation_poc"
+  name: "rectified-flow-baseline"
+  save_dir: "logs/"

@@ -1,0 +1,10 @@
+_target_: loop_generation_poc.data.dummy_data_module.DummyDataModule
+batch_size: 16
+num_samples: 10000
+train_val_split: 0.8
+seq_len: 256
+latent_dim: 64
+text_seq_len: 77
+text_dim: 768
+num_workers: 23
+pin_memory: true
