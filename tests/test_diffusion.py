@@ -49,7 +49,7 @@ def mock_backbone() -> Any:
 @pytest.fixture
 def dummy_batch() -> Dict[str, torch.Tensor]:
     """
-    Returns a dummy batch matching the datamodule contract defined in agents.md.
+    Returns a dummy batch matching the datamodule.
     """
     # [Batch, SeqLen, LatentDim]
     latents = torch.randn(2, 16, 64)
@@ -133,7 +133,7 @@ def test_conditional_diffusion_invalid_objective(mock_backbone: Any, dummy_batch
 
 
 def test_configure_optimizers_no_scheduler(mock_backbone: Any) -> None:
-    """Test Hydra optimizer mapping without a learning rate scheduler."""
+    """Test that `configure_optimizers` returns only an optimizer when no scheduler is provided."""
     model = ConditionalDiffusion(
         backbone=mock_backbone,
         optimizer=MagicMock(),
@@ -145,7 +145,7 @@ def test_configure_optimizers_no_scheduler(mock_backbone: Any) -> None:
 
 
 def test_configure_optimizers_with_scheduler(mock_backbone: Any) -> None:
-    """Test Hydra optimizer mapping with a learning rate scheduler."""
+    """Test that `configure_optimizers` returns a scheduler dictionary when a scheduler is provided."""
     model = ConditionalDiffusion(
         backbone=mock_backbone,
         optimizer=MagicMock(),

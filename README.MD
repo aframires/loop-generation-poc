@@ -28,13 +28,18 @@ This code was developed using Python 3.11 and PyTorch 2.10
 - WandB logging
 - Hydra parameterization
 - Checkpointing and resume capability
+- Linear warmup and cosine annealing LR
+- AdaLNZero global conditioning
+- Cross attention for input conditioning
+- Self attention with RoPE
+- Simple testing suite
 
 
 ## Simplifications
 - Only the Transformer backbone is available. Needs further decoupling logic for allowing a different backbone
 - Only selected conditioning approaches are present. Needs further decoupling for custom conditioning
 - No masking support
-- Only discrete euler (RF) and DDIM (v-prediction) areprovided. No custom noise schedule. No Distribution Shift
+- Only discrete euler (RF) and DDIM (v-prediction) are provided. No custom noise schedule. No Distribution Shift
 - No evaluation code
 - No EMA
 - No Autoencoder present

@@ -45,7 +45,7 @@ def test_dummy_data_module_dataloaders(data_module: DummyDataModule) -> None:
 
 def test_dummy_batch_schema(data_module: DummyDataModule) -> None:
     """
-    Test that yielded batches adhere strictly to the schema defined in agents.md.
+    Test that yielded batches adhere strictly to the shapes of t5 text encoder and audio embeddings.
     Expects 'latents' and 'text_embeds' with proper shapes and dtypes.
     """
     data_module.setup(stage="fit")

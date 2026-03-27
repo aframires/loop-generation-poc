@@ -74,7 +74,7 @@ def test_cross_attention_shapes() -> None:
 
 def test_transformer_block() -> None:
     """
-    Test a single Transformer block integrating AdaLN (via Mod), Self-Attention (with RoPE),
+    Test a single Transformer block integrating AdaLN, Self-Attention (with RoPE),
     Cross-Attention, and the MLP.
     """
     batch_size, seq_len, text_seq_len, dim, text_dim = 2, 16, 8, 64, 768
